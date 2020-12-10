@@ -49,6 +49,13 @@ class GameWindow(QWidget):
         self.playerTwoButton = QPushButton("Joueur 2")
         self.play = QPushButton("Play !")
 
+        #Label
+        self.graphLabel = QLabel()
+        self.circuitLabel = QLabel()
+
+        #Grid
+        self.grid = QGridLayout()
+
         print(f"Nombre de Round : {self.roundNumber} | Nombre de QBit :{self.qBitsNumber} \n")
 
         #Generate All Data
@@ -61,12 +68,26 @@ class GameWindow(QWidget):
         pass
 
     def onClickPlay(self):
-        self.roundNumber -= 1
-        print(self.roundNumber)
+
+        self.updateGame()
+        self.updateHandsPlayers()
+
         if self.roundNumber == 0 :
             print("FINI  !")
+            score_1 = score_counts(self.state)
+            score_0 = 100 - score_1
+            if score_1 < score_0 :
+                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 1")
+            else :
+                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 2")
+        self.roundNumber -= 1
 
+    def updateHandsPlayers(self):
+        if self.choicePlayerOne in self.hand_0:
+            self.hand_0[self.choicePlayerOne] = self.hand_0[self.choicePlayerOne] - 1
 
+        if self.choicePlayerTwo in self.hand_1:
+            self.hand_1[self.choicePlayerTwo] = self.hand_1[self.choicePlayerTwo] - 1
 
     def openDialogPlayerOne(self):
 
@@ -74,6 +95,7 @@ class GameWindow(QWidget):
         self.choicePlayerOne, okPressed = QInputDialog.getText(self, "Selection du circuit", hand_0_str, QLineEdit.Normal, "")
         if okPressed and self.choicePlayerOne != '':
             print(self.choicePlayerOne.upper())
+
 
     def openDialogPlayerTwo(self):
 
@@ -89,10 +111,20 @@ class GameWindow(QWidget):
         init_circuit = get_played_game(self.Circuits, self.Plays)
         self.state = compute_state(init_circuit)
 
-    def initUi(self):
+        # image
+        pixMapPrb = QPixmap('state_prb.png').scaled(400, 400, Qt.KeepAspectRatio)
+        self.graphLabel.setPixmap(pixMapPrb)
 
-        start = False
+        pixMapStage = QPixmap('stage.png')
+        self.circuitLabel.setPixmap(pixMapStage)
 
+        #Update Grid
+        self.grid.addWidget(self.circuitLabel, 0, 0, 1, 1)
+        self.grid.addWidget(self.graphLabel, 1, 0, -1, 5)
+
+        self.show()
+
+    def generateData(self):
         self.Circuits, self.Plays = generate_game(int(self.qBitsNumber), int(self.roundNumber), demo=demo)
         draw_game(self.Circuits, self.Plays, unveil=unveil, display_empty=display_empty)
         self.hand_0, self.hand_1 = distribute_cards(int(self.roundNumber), demo=demo)
@@ -100,20 +132,22 @@ class GameWindow(QWidget):
         self.state = compute_state(init_circuit)
         state_draw(self.state)
 
-        #Grid
-        grid = QGridLayout()
-        grid.setSpacing(10)
+    def initUi(self):
 
-        #label
-        graphLabel = QLabel()
-        circuitLabel = QLabel()
+        start = False
+
+        self.generateData()
+
+        #Grid
+
+        self.grid.setSpacing(10)
 
         # image
         pixMapPrb = QPixmap('state_prb.png').scaled(400,400,Qt.KeepAspectRatio)
-        graphLabel.setPixmap(pixMapPrb)
+        self.graphLabel.setPixmap(pixMapPrb)
 
         pixMapStage = QPixmap('stage.png')
-        circuitLabel.setPixmap(pixMapStage)
+        self.circuitLabel.setPixmap(pixMapStage)
 
         #button action
         self.playerOneButton.clicked.connect(self.openDialogPlayerOne)
@@ -121,13 +155,13 @@ class GameWindow(QWidget):
         self.play.clicked.connect(self.onClickPlay)
 
         #addingWidget
-        grid.addWidget(circuitLabel,0,0,1,1)
-        grid.addWidget(graphLabel,1,0,-1,5)
-        grid.addWidget(self.playerOneButton,8,6)
-        grid.addWidget(self.playerTwoButton, 8, 9)
-        grid.addWidget(self.play,9,6,1,6)
+        self.grid.addWidget(self.circuitLabel,0,0,1,1)
+        self.grid.addWidget(self.graphLabel,1,0,-1,5)
+        self.grid.addWidget(self.playerOneButton,8,6)
+        self.grid.addWidget(self.playerTwoButton, 8, 9)
+        self.grid.addWidget(self.play,9,6,1,6)
 
-        self.setLayout(grid)
+        self.setLayout(self.grid)
         self.setGeometry(300, 300, 800, 400)
         self.setWindowTitle('PokerQuantum Jeu')
 
