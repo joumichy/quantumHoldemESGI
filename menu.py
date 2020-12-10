@@ -2,9 +2,10 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import sys
 
-from circuit_generator import generate_game
-from  gameWindow import  *
+from PyQt5 import QtGui
 
+from circuit_generator import generate_game
+from gameWindow import *
 
 
 class Window(QWidget):
@@ -31,6 +32,7 @@ class Window(QWidget):
 
     def initUI(self):
         # label
+
         roundNumber = QLabel("Nombre de round")
         qbitsNumber = QLabel("Nombre QBits")
         imageLabel = QLabel()
@@ -61,6 +63,7 @@ class Window(QWidget):
         quitButton.clicked.connect(self.onClickQuit)
 
         self.setLayout(grid)
+        self.setStyle(QStyleFactory.create('Fusion'))
         self.setGeometry(300, 300, 350, 300)
         self.setWindowTitle('PokerQuantum Menu')
 
@@ -77,12 +80,6 @@ class Window(QWidget):
             self.game = GameWindow(self.roundNumber, self.qBitsNumber)
         self.showGame()
 
-    def getRoundNumber(self):
-        return self.roundNumber
-
-    def getQBitsNumber(self):
-        return self.qBitsNumber
-
     def setRoundNumber(self, roundNumber):
         self.roundNumber = roundNumber
 
@@ -90,12 +87,11 @@ class Window(QWidget):
         self.qBitsNumber = qBitsNumber
 
     def onClickQuit(self):
-        #self.hide()
+        # self.hide()
         self.close()
 
     def showGame(self):
         self.game.show()
-
 
 
 def create_menu():
@@ -104,6 +100,7 @@ def create_menu():
 
     # create the instance of our Window
     window = Window()
+
     # start the app
 
     app.exec()
