@@ -44,6 +44,20 @@ class GameWindow(QWidget):
         self.roundNumber = int(roundNumber)
         self.qBitsNumber = int(qBitsNumber)
 
+        #stylesheet
+        self.styleSheet = """
+        
+                QPushButton{
+                    background-color : rgb(180,255,255);
+                    width : 100%;
+                    height : 50%;
+                }
+                
+                QLabel{
+                    border: 1rem solid;
+                }
+                
+                """
         #Button
         self.playerOneButton = QPushButton("Joueur 1")
         self.playerTwoButton = QPushButton("Joueur 2")
@@ -61,11 +75,9 @@ class GameWindow(QWidget):
         #Generate All Data
         # On Charge le jeu
         #StartGame
-
+        self.setStyleSheet(self.styleSheet)
         self.initUi()
 
-    def generateGame(self):
-        pass
 
     def onClickPlay(self):
 
@@ -112,10 +124,10 @@ class GameWindow(QWidget):
         self.state = compute_state(init_circuit)
 
         # image
-        pixMapPrb = QPixmap('state_prb.png').scaled(400, 400, Qt.KeepAspectRatio)
+        pixMapPrb = QPixmap('state_prb.png').scaled(600, 400, Qt.KeepAspectRatio)
         self.graphLabel.setPixmap(pixMapPrb)
 
-        pixMapStage = QPixmap('stage.png')
+        pixMapStage = QPixmap('stage.png').scaled(800,600, Qt.KeepAspectRatio)
         self.circuitLabel.setPixmap(pixMapStage)
 
         #Update Grid
@@ -134,19 +146,11 @@ class GameWindow(QWidget):
 
     def initUi(self):
 
-        start = False
-
         self.generateData()
-
-        #Grid
-
-        self.grid.setSpacing(10)
-
         # image
-        pixMapPrb = QPixmap('state_prb.png').scaled(400,400,Qt.KeepAspectRatio)
+        pixMapPrb = QPixmap('state_prb.png').scaled(600,400, Qt.KeepAspectRatio)
         self.graphLabel.setPixmap(pixMapPrb)
-
-        pixMapStage = QPixmap('stage.png')
+        pixMapStage = QPixmap('stage.png').scaled(800,600, Qt.KeepAspectRatio)
         self.circuitLabel.setPixmap(pixMapStage)
 
         #button action
@@ -155,6 +159,8 @@ class GameWindow(QWidget):
         self.play.clicked.connect(self.onClickPlay)
 
         #addingWidget
+        # Grid
+        self.grid.setSpacing(10)
         self.grid.addWidget(self.circuitLabel,0,0,1,1)
         self.grid.addWidget(self.graphLabel,1,0,-1,5)
         self.grid.addWidget(self.playerOneButton,8,6)
@@ -166,7 +172,5 @@ class GameWindow(QWidget):
         self.setWindowTitle('PokerQuantum Jeu')
 
         ##Game
-
-
         self.show()
 

@@ -19,6 +19,14 @@ class Window(QWidget):
         self.isGameStarted = False
         self.game = None
 
+        self.styleSheet = """
+        QPushButton{
+            background-color : rgb(180,255,255);
+            
+        }
+        
+        """
+
         # lineEdit
         self.roundNumberEdit = QLineEdit()
         self.qbitsNumberEdit = QLineEdit()
@@ -62,6 +70,7 @@ class Window(QWidget):
         startButton.clicked.connect(self.onClickStart)
         quitButton.clicked.connect(self.onClickQuit)
 
+        self.setStyleSheet(self.styleSheet)
         self.setLayout(grid)
         self.setStyle(QStyleFactory.create('Fusion'))
         self.setGeometry(300, 300, 350, 300)
@@ -70,9 +79,6 @@ class Window(QWidget):
         self.show()
 
     def onClickStart(self):
-        # self.roundNumber = self.roundNumberEdit.text()
-        # self.qBitsNumber = self.qbitsNumberEdit.text()
-
         self.setRoundNumber(self.roundNumberEdit.text())
         self.setQBitsNumber(self.qbitsNumberEdit.text())
 
@@ -97,6 +103,8 @@ class Window(QWidget):
 def create_menu():
     # create pyqt5 app
     app = QApplication(sys.argv)
+    app.setStyle('Fusion')
+
 
     # create the instance of our Window
     window = Window()
