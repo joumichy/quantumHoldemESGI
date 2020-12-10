@@ -7,17 +7,6 @@ from  gameWindow import  *
 
 
 
-start = False
-
-Circuits = None
-Plays = None
-no_qubits = None
-no_rounds = None
-current_round = 0
-unveil = False
-display_empty = False
-demo = False
-
 class Window(QWidget):
 
     def __init__(self):
@@ -84,13 +73,8 @@ class Window(QWidget):
         self.setRoundNumber(self.roundNumberEdit.text())
         self.setQBitsNumber(self.qbitsNumberEdit.text())
 
-        #On Charge le jeu
-        while not start:
-            Circuits, Plays = generate_game(int(self.qBitsNumber), int(self.qBitsNumber), demo=demo)
-            start = True
-
         if not self.isGameStarted:
-            self.game = GameWindow(self.roundNumber, self.qBitsNumber, Plays, Circuits)
+            self.game = GameWindow(self.roundNumber, self.qBitsNumber)
         self.showGame()
 
     def getRoundNumber(self):
