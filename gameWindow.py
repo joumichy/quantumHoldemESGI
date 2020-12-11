@@ -81,18 +81,26 @@ class GameWindow(QWidget):
 
     def onClickPlay(self):
 
+        self.roundNumber -= 1
         self.updateGame()
         self.updateHandsPlayers()
 
         if self.roundNumber == 0 :
+            final_circuit = get_played_game(self.Circuits, self.Plays)
+            state_draw(self.state)
+            self.state = compute_state(final_circuit)
             print("FINI  !")
-            score_1 = score_counts(self.state)
+            score_1 = int(score_counts(self.state))
             score_0 = 100 - score_1
             if score_1 < score_0 :
-                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 1")
+
+                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 1 | %s/100"%score_0)
+            elif score_1 > score_0:
+
+                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 2 | %s/100"%score_1)
             else :
-                QMessageBox.about(self, "Resultat", "Le vainqueur est : Joueur 2")
-        self.roundNumber -= 1
+                QMessageBox.about(self, "Resultat !", "Egalité !")
+
 
     def updateHandsPlayers(self):
         if self.choicePlayerOne in self.hand_0:
@@ -122,6 +130,7 @@ class GameWindow(QWidget):
         draw_game(self.Circuits, self.Plays, unveil=unveil, display_empty=display_empty)
         init_circuit = get_played_game(self.Circuits, self.Plays)
         self.state = compute_state(init_circuit)
+        state_draw(self.state)
 
         # image
         pixMapPrb = QPixmap('state_prb.png').scaled(600, 400, Qt.KeepAspectRatio)
