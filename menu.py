@@ -7,7 +7,7 @@ from PyQt5 import QtGui
 from circuit_generator import generate_game
 from gameWindow import *
 
-
+IMAGE_POKER = 'images/poker.jpg'
 class Window(QWidget):
 
     def __init__(self):
@@ -47,7 +47,7 @@ class Window(QWidget):
         imageLabel = QLabel()
 
         # image
-        pixmap = QPixmap('poker.jpg')
+        pixmap = QPixmap(IMAGE_POKER)
         imageLabel.setPixmap(pixmap)
 
         # Button
@@ -106,10 +106,7 @@ def create_menu():
     app = QApplication(sys.argv)
     app.setStyle('Fusion')
 
-
-    # create the instance of our Window
     window = Window()
 
     # start the app
-
     app.exec()

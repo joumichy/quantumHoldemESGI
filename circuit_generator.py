@@ -7,6 +7,10 @@ from collections import Counter
 import math
 from PIL import Image
 
+
+IMAGE_NAME = 'images/stage.png'
+IMAGE_NAME_PRB = 'images/state_prb.png'
+
 def apply_gate(circuit,gate_str,applied,ctrl=0):
     if gate_str == 'H':
         circuit.h(applied)
@@ -132,7 +136,7 @@ def draw_game(Circuits, Plays, unveil = False, display_empty = False):
                 final_circ = final_circ + circ
             #final_circ.measure()
 
-    final_circ.draw(output = 'mpl').savefig('stage.png')
+    final_circ.draw(output = 'mpl').savefig(IMAGE_NAME)
 
 
 def distribute_cards(no_rounds, demo = False):
@@ -179,7 +183,6 @@ def compute_state(partial_circ):
     state = result.get_statevector(partial_circ, decimals=3)
     return state
 
-
 def score_counts(state_v):
     e_ones = 0
     for i, p in enumerate(np.abs(state_v)**2):
@@ -193,22 +196,5 @@ def state_draw(state):
     n_qubits = int(math.log(len(state),2))
     for i in range(len(state)):
         state_dict[bin(i)[2:].zfill(n_qubits)[::-1]] = 1000*np.abs(state[i])**2
-    plot_histogram(state_dict).savefig("state_prb.png")
+    plot_histogram(state_dict).savefig(IMAGE_NAME_PRB)
 
-def resize_img(title, basewidth):
-    img = Image.open(title)
-    if img.size[0] > basewidth:
-        wpercent = (basewidth/float(img.size[0]))
-        hsize = int((float(img.size[1])*float(wpercent)))
-        img = img.resize((basewidth,hsize), Image.ANTIALIAS)
-        img.save(title)
-    else:
-        pass
-
-def resize_img_height(title, base_height):
-    img = Image.open(title)
-    if img.size[1] > base_height:
-        img = img.resize((img.size[0],base_height), Image.ANTIALIAS)
-        img.save(title)
-    else:
-        pass

@@ -20,8 +20,8 @@ unveil = False
 display_empty = False
 demo = False
 
-IMAGE_NAME = 'stage.png'
-IMAGE_NAME_PRB = 'state_prb.png'
+IMAGE_NAME = 'images/stage.png'
+IMAGE_NAME_PRB = 'images/state_prb.png'
 
 class GameWindow(QWidget):
 
@@ -36,6 +36,8 @@ class GameWindow(QWidget):
 
     hand_0 = ""
     hand_1 = ""
+
+    current_round = 0
 
     state = None
 
@@ -72,20 +74,23 @@ class GameWindow(QWidget):
         #Grid
         self.grid = QGridLayout()
 
-        #Generate All Data
-        # On Charge le jeu
         #StartGame
         self.setStyleSheet(self.styleSheet)
         self.initUi()
 
 
+
     def onClickPlay(self):
 
-        self.roundNumber -= 1
+        #Mise à jour de la partie
+
         self.updateGame()
         self.updateHandsPlayers()
+        self.current_round += 1
 
-        if self.roundNumber == 0 :
+        #Dernier tour
+        print(self.current_round)
+        if self.roundNumber == self.current_round:
             final_circuit = get_played_game(self.Circuits, self.Plays)
             state_draw(self.state)
             self.state = compute_state(final_circuit)
@@ -101,7 +106,7 @@ class GameWindow(QWidget):
             else :
                 QMessageBox.about(self, "Resultat !", "Egalité !")
 
-
+    #Mise à jour des 'Cartes'
     def updateHandsPlayers(self):
         if self.choicePlayerOne in self.hand_0:
             self.hand_0[self.choicePlayerOne] = self.hand_0[self.choicePlayerOne] - 1
@@ -109,6 +114,7 @@ class GameWindow(QWidget):
         if self.choicePlayerTwo in self.hand_1:
             self.hand_1[self.choicePlayerTwo] = self.hand_1[self.choicePlayerTwo] - 1
 
+    #Selection joueur 1
     def openDialogPlayerOne(self):
 
         hand_0_str = '  '.join(['%s: %s   ' % (key, value) for (key, value) in self.hand_0.items()])
@@ -116,7 +122,7 @@ class GameWindow(QWidget):
         if okPressed and self.choicePlayerOne != '':
             print(self.choicePlayerOne.upper())
 
-
+    # Selection joueur 2
     def openDialogPlayerTwo(self):
 
         hand_1_str = '  '.join(['%s: %s   ' % (key, value) for (key, value) in self.hand_1.items()])
@@ -124,19 +130,20 @@ class GameWindow(QWidget):
         if okPressed and  self.choicePlayerTwo != '':
             print(self.choicePlayerTwo.upper())
 
+    #Mise à jour de la partie
     def updateGame(self):
 
-        self.Plays = play_round(current_round, self.Plays, self.choicePlayerOne, self.choicePlayerTwo)
+        self.Plays = play_round(self.current_round, self.Plays, self.choicePlayerOne, self.choicePlayerTwo)
         draw_game(self.Circuits, self.Plays, unveil=unveil, display_empty=display_empty)
         init_circuit = get_played_game(self.Circuits, self.Plays)
         self.state = compute_state(init_circuit)
         state_draw(self.state)
 
         # image
-        pixMapPrb = QPixmap('state_prb.png').scaled(600, 400, Qt.KeepAspectRatio)
+        pixMapPrb = QPixmap(IMAGE_NAME_PRB).scaled(600, 400, Qt.KeepAspectRatio)
         self.graphLabel.setPixmap(pixMapPrb)
 
-        pixMapStage = QPixmap('stage.png').scaled(800,600, Qt.KeepAspectRatio)
+        pixMapStage = QPixmap(IMAGE_NAME).scaled(800,600, Qt.KeepAspectRatio)
         self.circuitLabel.setPixmap(pixMapStage)
 
         #Update Grid
@@ -145,6 +152,7 @@ class GameWindow(QWidget):
 
         self.show()
 
+    #Generation des données
     def generateData(self):
         self.Circuits, self.Plays = generate_game(int(self.qBitsNumber), int(self.roundNumber), demo=demo)
         draw_game(self.Circuits, self.Plays, unveil=unveil, display_empty=display_empty)
@@ -153,13 +161,15 @@ class GameWindow(QWidget):
         self.state = compute_state(init_circuit)
         state_draw(self.state)
 
+    #Generation interface graphique
     def initUi(self):
 
         self.generateData()
+
         # image
-        pixMapPrb = QPixmap('state_prb.png').scaled(600,400, Qt.KeepAspectRatio)
+        pixMapPrb = QPixmap(IMAGE_NAME_PRB).scaled(600,400, Qt.KeepAspectRatio)
         self.graphLabel.setPixmap(pixMapPrb)
-        pixMapStage = QPixmap('stage.png').scaled(800,600, Qt.KeepAspectRatio)
+        pixMapStage = QPixmap(IMAGE_NAME).scaled(800,600, Qt.KeepAspectRatio)
         self.circuitLabel.setPixmap(pixMapStage)
 
         #button action
