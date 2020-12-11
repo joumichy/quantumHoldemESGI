@@ -20,6 +20,7 @@ class Window(QWidget):
         self.game = None
 
         self.styleSheet = """
+        
         QPushButton{
             background-color : rgb(180,255,255);
             
@@ -87,10 +88,10 @@ class Window(QWidget):
         self.showGame()
 
     def setRoundNumber(self, roundNumber):
-        self.roundNumber = roundNumber
+        self.roundNumber = int(roundNumber)
 
     def setQBitsNumber(self, qBitsNumber):
-        self.qBitsNumber = qBitsNumber
+        self.qBitsNumber = int(qBitsNumber)
 
     def onClickQuit(self):
         # self.hide()

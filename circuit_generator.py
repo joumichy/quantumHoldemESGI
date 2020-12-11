@@ -12,11 +12,16 @@ def apply_gate(circuit,gate_str,applied,ctrl=0):
         circuit.h(applied)
     elif gate_str == 'HZ':
         circuit.z(applied)
-        circuit.h(applied)
     elif gate_str == 'X':
         circuit.x(applied)
+    elif gate_str == 'Y':
+        circuit.y(applied)
     elif gate_str == 'Z':
         circuit.z(applied)
+    elif gate_str == 'S':
+        circuit.s(applied)
+    elif gate_str == 'T':
+        circuit.t(applied)
     elif gate_str == 'CX':
         circuit.cx(ctrl,applied)
     elif gate_str == 'I':
@@ -27,7 +32,7 @@ def apply_gate(circuit,gate_str,applied,ctrl=0):
 
 
 def generate_subcircuit(no_qubits):
-    gates_lists = ['H', 'HZ', 'X', 'Z', 'CX'] + 3*['Id']
+    gates_lists = ['H', 'HZ', 'X', 'Z', 'CX', 'Y', 'S', 'T'] + 3*['Id']
     circuit = QuantumCircuit(no_qubits)
     all_ids = True
     for q in range(no_qubits):
@@ -135,7 +140,7 @@ def distribute_cards(no_rounds, demo = False):
         hand_P0 = {'Z':1, 'HZ': 1, 'X': 1, 'H':2}
         hand_P1 = {'I':2, 'X': 1, 'Z': 1, 'HZ': 1}
     else:
-        cards_list = ['H', 'HZ', 'X', 'Z', 'I']
+        cards_list = ['H', 'HZ', 'X', 'Z', 'CX', 'Y', 'S', 'T']
         deck = np.array(no_rounds*cards_list)
         np.random.shuffle(deck)
         hand_size = no_rounds + 1

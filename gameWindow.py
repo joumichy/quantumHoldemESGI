@@ -46,7 +46,9 @@ class GameWindow(QWidget):
 
         #stylesheet
         self.styleSheet = """
-        
+                
+                background-color: rgb(200,200,200);
+                
                 QPushButton{
                     background-color : rgb(180,255,255);
                     width : 100%;
@@ -69,8 +71,6 @@ class GameWindow(QWidget):
 
         #Grid
         self.grid = QGridLayout()
-
-        print(f"Nombre de Round : {self.roundNumber} | Nombre de QBit :{self.qBitsNumber} \n")
 
         #Generate All Data
         # On Charge le jeu
